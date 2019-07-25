@@ -1,0 +1,14 @@
+{
+    "name": "marhone/db-doc",
+    "description": "database dictionary",
+    "type": "lib",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "marhone",
+            "email": "no7nic3@gamil.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
