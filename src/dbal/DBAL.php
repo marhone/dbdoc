@@ -19,6 +19,7 @@ class DBAL
 
     public function __construct()
     {
+        // @TODO: DATA SOURCE SHOULD BE CONFIGURABLE.
         $host = '127.0.0.1';
         $db = 'danmarks';
         $user = 'root';
@@ -69,6 +70,7 @@ class DBAL
                     if ($length >= $maxFieldNameLength) {
                         $maxFieldNameLength = $length;
                     }
+
                     return [
                         'Field' => $field,
                         'Type' => $item['Type'],
@@ -80,9 +82,9 @@ class DBAL
 
         return [
             'meta' => [
-                'maxFieldNameLength' => $maxFieldNameLength
+                'maxFieldNameLength' => $maxFieldNameLength,
             ],
-            'tables' => $columns
+            'tables' => $columns,
         ];
     }
 }

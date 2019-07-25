@@ -27,16 +27,23 @@ class Doc
                 $content .= sprintf("### %s\n", $table['Name']);
             }
             $columns = $table['Columns'];
+            $copyable = [];
             foreach ($columns as $column) {
                 $field = $column['Field'];
                 $type = ' ' . $column['Type'];
                 $comment = $column['Comment'];
 
-                // @TODO: SCALE SHOULD BE CONFIGURABLE
+                // @TODO: IGNORE SHOULD BE CONFIGURABLE.
+                $IGNORE = ['id', 'deleted_at', 'created_at', 'updated_at'];
+                if (!in_array($field, $IGNORE)) {
+                    $copyable[] = $field;
+                }
+
+                // @TODO: SCALE SHOULD BE CONFIGURABLE.
                 $SCALE = 1.2;
                 $type = str_pad($type, $maxFiledLength * $SCALE - strlen($field), '-', STR_PAD_LEFT);
 
-                $fullField = sprintf("%s %s", $field, $type);
+                $fullField = sprintf('%s %s', $field, $type);
 
                 if (!empty(trim($comment))) {
                     $content .= sprintf("* %s : %s\n", $fullField, $comment);
@@ -44,6 +51,7 @@ class Doc
                     $content .= sprintf("* %s\n", $fullField);
                 }
             }
+            $content .= sprintf("> %s\n", implode(', ', $copyable));
             $content .= "\n\n";
         }
 
