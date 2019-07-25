@@ -10,5 +10,18 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "doctrine/dbal": "2.9.x-dev",
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "files": ["src/functions.php"],
+        "psr-4": {
+            "Dbdoc\\": "src/"
+        }
+    },
+    "bin": ["bin/dbdoc"],
+    "require-dev": {
+        "symfony/var-dumper": "4.4.x-dev"
+    }
 }
