@@ -13,18 +13,25 @@ namespace Dbdoc;
 
 class Doc
 {
-    public function markdown($data)
+    protected $content = '';
+    protected $filename;
+
+    public function __construct($filename)
     {
-        $content = '';
+        $this->filename = $filename;
+    }
+
+    public function markdown($data, $lineScale, $ignore)
+    {
         $maxFiledLength = $data['meta']['maxFieldNameLength'];
         $tables = $data['tables'];
 
         foreach ($tables as $table) {
             $annotation = $table['Comment'];
             if (!empty(trim($annotation))) {
-                $content .= sprintf("### %s %s\n", $table['Comment'], $table['Name']);
+                $this->content .= sprintf("### %s %s\n", $table['Comment'], $table['Name']);
             } else {
-                $content .= sprintf("### %s\n", $table['Name']);
+                $this->content .= sprintf("### %s\n", $table['Name']);
             }
             $columns = $table['Columns'];
             $copyable = [];
@@ -33,28 +40,35 @@ class Doc
                 $type = ' ' . $column['Type'];
                 $comment = $column['Comment'];
 
-                // @TODO: IGNORE SHOULD BE CONFIGURABLE.
-                $IGNORE = ['id', 'deleted_at', 'created_at', 'updated_at'];
-                if (!in_array($field, $IGNORE)) {
+                if (!in_array($field, $ignore)) {
                     $copyable[] = $field;
                 }
 
-                // @TODO: SCALE SHOULD BE CONFIGURABLE.
-                $SCALE = 1.2;
-                $type = str_pad($type, $maxFiledLength * $SCALE - strlen($field), '-', STR_PAD_LEFT);
+
+                $type = str_pad($type, $maxFiledLength * $lineScale - strlen($field), '-', STR_PAD_LEFT);
 
                 $fullField = sprintf('%s %s', $field, $type);
 
                 if (!empty(trim($comment))) {
-                    $content .= sprintf("* %s : %s\n", $fullField, $comment);
+                    $this->content .= sprintf("* %s : %s\n", $fullField, $comment);
                 } else {
-                    $content .= sprintf("* %s\n", $fullField);
+                    $this->content .= sprintf("* %s\n", $fullField);
                 }
             }
-            $content .= sprintf("> %s\n", implode(', ', $copyable));
-            $content .= "\n\n";
+            $this->content .= sprintf("> %s\n", implode(', ', $copyable));
+            $this->content .= "\n\n";
         }
 
-        return $content;
+        return $this;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function save()
+    {
+        file_put_contents($this->filename, $this->content);
     }
 }

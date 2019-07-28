@@ -12,16 +12,51 @@
 namespace Dbdoc;
 
 use Dbdoc\dbal\DBAL;
+use Dotenv\Dotenv;
 
 if (!function_exists('Dbdoc\bin')) {
     function bin()
     {
         return function () {
-            $content = (new Doc())->markdown((new DBAL())->tables());
+            // load env.
+            loadenv();
 
-            // @todo: OUTPUT SHOULD BE CONFIGURABLE.
-            $OUTPUT = 'dict.md';
-            file_put_contents($OUTPUT, $content);
+            $host = env('DB_HOST', '');
+            $db = env('DB_DATABASE', '');
+            $user = env('DB_USERNAME', '');
+            $pass = env('DB_PASSWORD', '');
+
+            $docLineScale = env('DOC_LINE_SCALE', 1.2);
+            $docFieldIgnore = explode(',', env('DOC_FIELD_IGNORE', ''));
+            $filename = env('DOC_NAME', 'dictionary.md');
+
+            (new Doc($filename))
+                ->markdown(
+                    (new DBAL($host, $db, $user, $pass))->tables(),
+                    $docLineScale,
+                    $docFieldIgnore
+                )
+                ->save();
         };
+    }
+}
+
+
+if (!function_exists('Dbdoc\loadenv')) {
+    function loadenv()
+    {
+        $dotenv = Dotenv::create(getcwd(), '.env');
+        $dotenv->load();
+    }
+}
+
+if (!function_exists('Dbdoc\env')) {
+    function env($key, $default = null)
+    {
+        $value = getenv($key);
+        if ($value === false) {
+            return $default;
+        }
+        return $value;
     }
 }

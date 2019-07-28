@@ -17,15 +17,9 @@ class DBAL
 {
     private static $pdo = null;
 
-    public function __construct()
+    public function __construct($host, $db, $user, $pass)
     {
-        // @TODO: DATA SOURCE SHOULD BE CONFIGURABLE.
-        $host = '127.0.0.1';
-        $db = 'danmarks';
-        $user = 'root';
-        $pass = 'shell123';
         $charset = 'utf8mb4';
-
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
