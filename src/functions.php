@@ -19,6 +19,7 @@ if (!function_exists('Dbdoc\bin')) {
     {
         return function () {
             // load env.
+            $start = microtime(true);
             loadenv();
 
             $host = env('DB_HOST', '');
@@ -30,17 +31,25 @@ if (!function_exists('Dbdoc\bin')) {
             $docFieldIgnore = explode(',', env('DOC_FIELD_IGNORE', ''));
             $filename = env('DOC_NAME', 'dictionary.md');
 
+            $database = (new DBAL($host, $db, $user, $pass))->tables();
             (new Doc($filename))
                 ->markdown(
-                    (new DBAL($host, $db, $user, $pass))->tables(),
+                    $database,
                     $docLineScale,
                     $docFieldIgnore
                 )
                 ->save();
+
+            $spent = round(microtime(true) - $start, 3);
+            $memory = round(memory_get_usage() / (1024 * 1024), 3);
+
+            $tableCount = count($database['tables']);
+            echo "Using data source: {$db}@{$host}" . PHP_EOL;
+            echo "{$tableCount} table(s) found." . PHP_EOL;
+            echo "[{$filename}] saved  in {$spent} seconds, {$memory} MB memory used." . PHP_EOL;
         };
     }
 }
-
 
 if (!function_exists('Dbdoc\loadenv')) {
     function loadenv()
@@ -57,6 +66,7 @@ if (!function_exists('Dbdoc\env')) {
         if ($value === false) {
             return $default;
         }
+
         return $value;
     }
 }

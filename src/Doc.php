@@ -44,7 +44,6 @@ class Doc
                     $copyable[] = $field;
                 }
 
-
                 $type = str_pad($type, $maxFiledLength * $lineScale - strlen($field), '-', STR_PAD_LEFT);
 
                 $fullField = sprintf('%s %s', $field, $type);
