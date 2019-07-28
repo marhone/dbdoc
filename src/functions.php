@@ -44,9 +44,15 @@ if (!function_exists('Dbdoc\bin')) {
             $memory = round(memory_get_usage() / (1024 * 1024), 3);
 
             $tableCount = count($database['tables']);
-            echo "Using data source: {$db}@{$host}" . PHP_EOL;
-            echo "{$tableCount} table(s) found." . PHP_EOL;
-            echo "[{$filename}] saved  in {$spent} seconds, {$memory} MB memory used." . PHP_EOL;
+
+            $message = <<<DOC
+Using data source: {$db}@{$host}
+Found {$tableCount} table(s)
+
+[{$filename}] saved in {$spent} seconds, {$memory} MB memory used.
+
+DOC;
+            echo $message;
         };
     }
 }
