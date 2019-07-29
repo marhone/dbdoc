@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "ext-pdo": "*",
-        "vlucas/phpdotenv": "^3.4@dev"
+        "vlucas/phpdotenv": "^3.4.*"
     },
     "autoload": {
         "files": ["src/functions.php"],
@@ -22,6 +22,6 @@
     },
     "bin": ["bin/dbdoc"],
     "require-dev": {
-        "symfony/var-dumper": "4.4.x-dev"
+        "symfony/var-dumper": "^4.4.*"
     }
 }
