@@ -60,7 +60,7 @@ DOC;
 if (!function_exists('Dbdoc\loadenv')) {
     function loadenv()
     {
-        $dotenv = Dotenv::create(getcwd(), '.env');
+        $dotenv = new Dotenv(getcwd(), '.env');
         $dotenv->load();
     }
 }
