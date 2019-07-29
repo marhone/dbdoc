@@ -41,7 +41,7 @@ class Doc
                 $comment = $column['Comment'];
 
                 if (!in_array($field, $ignore)) {
-                    $copyable[] = $field;
+                    $copyable[] = sprintf("'%s'", $field);
                 }
 
                 $type = str_pad($type, $maxFiledLength * $lineScale - strlen($field), '-', STR_PAD_LEFT);
