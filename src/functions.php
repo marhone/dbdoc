@@ -50,6 +50,7 @@ if (!function_exists('Dbdoc\bin')) {
 Found {$tableCount} table(s)
 
 [{$filename}] saved in {$spent} seconds, {$memory} MB memory used.
+
 DOC;
             echo $message;
         };
