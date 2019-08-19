@@ -31,6 +31,8 @@ if (!function_exists('Dbdoc\bin')) {
             $docFieldIgnore = explode(',', env('DOC_FIELD_IGNORE', ''));
             $filename = env('DOC_NAME', 'dictionary.md');
 
+            echo "Using data source: {$db}@{$host}, dic will be saving in [{$filename}]" . PHP_EOL;
+
             $database = (new DBAL($host, $db, $user, $pass))->tables();
             (new Doc($filename))
                 ->markdown(
@@ -44,13 +46,10 @@ if (!function_exists('Dbdoc\bin')) {
             $memory = round(memory_get_usage() / (1024 * 1024), 3);
 
             $tableCount = count($database['tables']);
-
             $message = <<<DOC
-Using data source: {$db}@{$host}
 Found {$tableCount} table(s)
 
 [{$filename}] saved in {$spent} seconds, {$memory} MB memory used.
-
 DOC;
             echo $message;
         };
