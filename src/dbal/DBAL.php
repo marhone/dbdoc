@@ -60,15 +60,22 @@ class DBAL
                 'Comment' => $table['Comment'],
                 'Columns' => array_map(function ($item) use (&$maxFieldNameLength) {
                     $field = $item['Field'];
-                    $length = strlen($field . $item['Type']);
+                    $fieldType = $item['Type'];
+                    $fieldComment = $item['Comment'];
+                    if (strpos($fieldType, 'enum') !== false) {
+                        $fieldComment .= str_replace_first('enum', '', $fieldType);
+                        $fieldType = 'enum';
+                    }
+
+                    $length = strlen($field . $fieldType);
                     if ($length >= $maxFieldNameLength) {
                         $maxFieldNameLength = $length;
                     }
 
                     return [
                         'Field' => $field,
-                        'Type' => $item['Type'],
-                        'Comment' => $item['Comment'],
+                        'Type' => $fieldType,
+                        'Comment' => $fieldComment,
                     ];
                 }, $result),
             ];
