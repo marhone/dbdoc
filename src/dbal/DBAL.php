@@ -63,7 +63,7 @@ class DBAL
                     $fieldType = $item['Type'];
                     $fieldComment = $item['Comment'];
                     if (strpos($fieldType, 'enum') !== false) {
-                        $fieldComment .= str_replace_first('enum', '', $fieldType);
+                        $fieldComment .= $this->str_replace_first('enum', '', $fieldType);
                         $fieldType = 'enum';
                     }
 
@@ -87,5 +87,20 @@ class DBAL
             ],
             'tables' => $columns,
         ];
+    }
+
+    private function str_replace_first($search, $replace, $subject)
+    {
+        if ($search == '') {
+            return $subject;
+        }
+
+        $position = strpos($subject, $search);
+
+        if ($position !== false) {
+            return substr_replace($subject, $replace, $position, strlen($search));
+        }
+
+        return $subject;
     }
 }
