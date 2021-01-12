@@ -31,23 +31,31 @@ class DBAL
                 self::$pdo = new PDO($dsn, $user, $pass, $options);
             }
         } catch (\PDOException $e) {
-            throw new \PDOException($e->getMessage(), (int) $e->getCode());
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
         }
     }
 
-    public function tables()
+    public function tables(array $only = [])
     {
         $statement = self::$pdo->query('SHOW TABLE STATUS');
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $tables = array_map(function ($item) {
-            return [
+        $tables = array_map(function ($item) use ($only) {
+            $payload = [
                 'Name' => $item['Name'],
                 'Engine' => $item['Engine'],
                 'Comment' => $item['Comment'],
             ];
+            if (!empty($only)) {
+                if (in_array($item['Name'], $only)) {
+                    return $payload;
+                }
+            } else {
+                return $payload;
+            }
         }, $result);
 
+        $tables = array_filter($tables);
         $columns = [];
         $maxFieldNameLength = 0;
         foreach ($tables as $table) {
@@ -85,7 +93,7 @@ class DBAL
             'meta' => [
                 'maxFieldNameLength' => $maxFieldNameLength,
             ],
-            'tables' => $columns,
+            'tables' => array_reverse($columns),
         ];
     }
 

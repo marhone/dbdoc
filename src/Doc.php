@@ -21,7 +21,7 @@ class Doc
         $this->filename = $filename;
     }
 
-    public function markdown($data, $lineScale, $ignore)
+    public function markdown($data, $lineScale, $ignore, bool $inlineFields = true)
     {
         $maxFiledLength = $data['meta']['maxFieldNameLength'];
         $tables = $data['tables'];
@@ -54,7 +54,10 @@ class Doc
                     $this->content .= sprintf("* %s\n", $fullField);
                 }
             }
-            $this->content .= sprintf("> %s\n", implode(', ', $copyable));
+
+            if ($inlineFields) {
+                $this->content .= sprintf("> %s\n", implode(', ', $copyable));
+            }
             $this->content .= "\n\n";
         }
 

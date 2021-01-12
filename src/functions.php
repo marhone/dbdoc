@@ -30,15 +30,18 @@ if (!function_exists('Dbdoc\bin')) {
             $docLineScale = env('DOC_LINE_SCALE', 1.2);
             $docFieldIgnore = explode(',', env('DOC_FIELD_IGNORE', ''));
             $filename = env('DOC_NAME', 'dictionary.md');
+            $tables = array_filter(explode(',', env('DOC_TABLES', '')));
+            $inlineFields = env('DOC_INLINE_FIELDS', 'true') == 'true';
 
             echo "Using data source: {$db}@{$host}, dic will be saving in [{$filename}]" . PHP_EOL;
 
-            $database = (new DBAL($host, $db, $user, $pass))->tables();
+            $database = (new DBAL($host, $db, $user, $pass))->tables($tables);
             (new Doc($filename))
                 ->markdown(
                     $database,
                     $docLineScale,
-                    $docFieldIgnore
+                    $docFieldIgnore,
+                    $inlineFields
                 )
                 ->save();
 
